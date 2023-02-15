@@ -1,0 +1,162 @@
+.mainContent {
+  width: 100%;
+  padding: 4% 15%;
+}
+.loader{
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -50px;
+  margin-left: -50px;
+  width: 100px;
+  height: 100px;
+
+}
+.PhoneInput {
+  /* background-color: #ededed; */
+  margin-bottom: 15px;
+}
+.PhoneInputInput {
+  padding: 2% 5%;
+  background-color: #ededed;
+  margin-left: 10px;
+  height: 45px;
+  border: none transparent;
+  outline: none;
+  justify-content: flex-start;
+}
+
+.content {
+  display: flex;
+}
+.imageContent {
+  font-size: medium;
+  height: 500px;
+  flex: 7;
+  padding-top: 20px;
+  background-color: #fbf1ef;
+  margin-right: 35px;
+}
+.container-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.imageContext-heading {
+  display: flex;
+  justify-content: center;
+  font-size: medium;
+  font-weight: bold;
+}
+.imageContext-text {
+  display: flex;
+  justify-content: center;
+  font-size: small;
+  font-weight: 400;
+}
+.formContent {
+  height: 500px;
+  flex: 3;
+}
+
+.formContent-heading {
+  display: flex;
+  justify-content: center;
+  font-size: medium;
+  font-weight: 500;
+  margin-bottom: 25px;
+}
+.formContent-content {
+  display: flex;
+  justify-content: space-between;
+}
+.formContent-button {
+  background-color: #d17556;
+  margin: 1.5em 1em;
+  cursor: pointer;
+
+  /* width: 250px; */
+}
+.formContent-button-text {
+  color: #fdfefd;
+  padding: 12px;
+  font-weight: 500;
+
+}
+
+.mobileNumber-text {
+  display: flex;
+  font-size: small;
+  font-weight: 800;
+  margin-bottom: 10px;
+  justify-content: flex-start;
+}
+.checkboxAgreed {
+  margin-right: 7px;
+  width: 15px;
+  height: 15px;
+}
+.checkboxText {
+  font-size: 11px;
+}
+[type="checkbox"] {
+  vertical-align: middle;
+}
+.mobileNumber-button {
+  display: flex;
+  justify-content: center;
+  background-color: #d17556;
+  margin: 1em auto;
+  cursor: pointer;
+  width: 50%;
+}
+.mobileNumber-button-text {
+  display: flex;
+  color: #fdfefd;
+  padding: 12px;
+  font-weight: 500;
+  justify-content: center;
+}
+
+.textfield {
+  padding: 2% 5%;
+  background-color: #ededed;
+  /* margin-left: 10px; */
+  height: 45px;
+  width: 100%;
+  /* width: 80%; */
+  border: none transparent;
+  outline: none;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+.textfield-otp {
+   padding: 2% 5%;
+   background-color: #ededed;
+   /* margin-left: 10px; */
+   height: 45px;
+   width: 100%;
+   /* width: 80%; */
+   border: none transparent;
+   outline: none;
+   justify-content: center;
+   font-weight: bold;
+   font-size: medium;
+   letter-spacing: 10px;
+ }
+ .disabled {
+
+
+  display: flex;
+  justify-content: center;
+ 
+  margin: 1em auto;
+  background-color: #d17556;
+  width: 50%;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
