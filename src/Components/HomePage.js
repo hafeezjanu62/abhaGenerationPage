@@ -39,23 +39,20 @@ const [name,setName] = useState('');
 
   const SessionTokenGenerationApi = () => {
     const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        clientId: "SBX_002272",
-        clientSecret: "790310f8-65c5-4c98-99ee-d18ef8b8ac43",
-      }),
+      method: "POST",  
     };
-    fetch("/sessions", requestOptions)
+    // "proxy": "https://dev.ndhm.gov.in/gateway/v0.5",
+    fetch("https://kas-api.swaasa.ai:8085/api/sessions", requestOptions)
       .then((response) => response.json())
       .then((data) => {
         setData(data);
+        console.log(data);
         setLoader(false);
       });
   };
 
   const mobileOtpGenerationApi = () => {
-    var token = data.accessToken;
+    var token = data.sessionData.accessToken;
     axios
       .post(
         "/generateOtp",
@@ -85,7 +82,7 @@ const [name,setName] = useState('');
   };
 
   const mobileOtpVerificationApi = () => {
-    var token = data.accessToken;
+    var token = data.sessionData.accessToken;
     axios
       .post(
         "/verifyOtp",
@@ -115,59 +112,59 @@ const [name,setName] = useState('');
       });
   };
   const abhaIdGenerationApi = () => {
-    var accesstoken = data.accessToken;
+    var accesstoken = data.sessionData.accessToken;
     var token = otpResponse.token
     console.log(name);
     axios
       .post(
         "/createHealthId",
-        {
-          "address": "b-14 someshwar nagar",
-          "dayOfBirth": 27,
-          "districtCode": 603,
-          "email": "example@demo.com",
-          "firstName": "Kiran",
-          "gender": "M",
-          "healthId": "kiguen096478",
-          "lastName": "Singh",
-          "middleName": "",
-          "monthOfBirth": "5",
-          "name": "Kiran",
-          "password": "India@143",
-          "pincode": "",
-          "profilePhoto": "",
-          "stateCode": 35,
-          "subdistrictCode": "",
-          "token": token,
-          "txnId": txnId,
-          "villageCode": "",
-          "wardCode": "",
-          "yearOfBirth": 1996
-      },
       //   {
-      //     "address": "h",
-      //     "dayOfBirth": dob.getDate(),
+      //     "address": "b-14 someshwar nagar",
+      //     "dayOfBirth": 27,
       //     "districtCode": 603,
-      //     "email": "",
-      //     "firstName": name,
-      //     "gender": dropDownGenderValue.charAt(0),
-      //     "healthId": abhaId,
-      //     "lastName": "",
+      //     "email": "example@demo.com",
+      //     "firstName": "Kiran",
+      //     "gender": "M",
+      //     "healthId": "kiguen096478",
+      //     "lastName": "Singh",
       //     "middleName": "",
-      //     "monthOfBirth": dob.getMonth() + 1,
-      //     "name": name,
-      //     "password": password,
-      //     "pincode": "500056",
+      //     "monthOfBirth": "5",
+      //     "name": "Kiran",
+      //     "password": "India@143",
+      //     "pincode": "",
       //     "profilePhoto": "",
       //     "stateCode": 35,
       //     "subdistrictCode": "",
-          
       //     "token": token,
       //     "txnId": txnId,
       //     "villageCode": "",
       //     "wardCode": "",
-      //     "yearOfBirth": dob.getFullYear()
+      //     "yearOfBirth": 1996
       // },
+        {
+          "address": "h",
+          "dayOfBirth": dob.getDate(),
+          "districtCode": 603,
+          "email": "",
+          "firstName": name,
+          "gender": dropDownGenderValue.charAt(0),
+          "healthId": abhaId,
+          "lastName": "",
+          "middleName": "",
+          "monthOfBirth": dob.getMonth() + 1,
+          "name": name,
+          "password": password,
+          "pincode": "500056",
+          "profilePhoto": "",
+          "stateCode": 35,
+          "subdistrictCode": "",
+          
+          "token": token,
+          "txnId": txnId,
+          "villageCode": "",
+          "wardCode": "",
+          "yearOfBirth": dob.getFullYear()
+      },
         {
           headers: {
             Authorization: "Bearer " + accesstoken,
