@@ -10,6 +10,34 @@
 
 }
 
+.menu{
+    display: none;
+}
+
+@media screen and (max-width:600px) {
+    .container-flex{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .menu{
+        display: block;
+        position: absolute;
+        right: 40px;
+        top: 30px;
+    }
+}
+
+.menuLine{
+    width: 20px;
+    height: 3px;
+    background-color: #ff7d00;
+    margin-bottom: 4px;
+    justify-content: right;
+}
+
 .container-flex {
     display: flex;
     justify-content: space-between;
@@ -17,7 +45,7 @@
 }
 .spaceBox{
     width: 270px;
- display: inline-block;
+    display: inline-block;
 
 }
 .logo{

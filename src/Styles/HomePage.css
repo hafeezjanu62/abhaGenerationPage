@@ -3,6 +3,7 @@
   width: 100%;
   padding: 4% 15%;
 }
+
 .loader{
 
   position: absolute;
@@ -31,6 +32,7 @@
 .content {
   display: flex;
 }
+
 .imageContent {
   font-size: medium;
   height: 500px;
@@ -216,6 +218,67 @@
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 25px;
+}
+
+@media screen and (max-width:426px) {
+  .content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+  }
+  .imageContent{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .form-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .imageContext-heading{
+    font-size: 10px;
+    font-weight: 600;
+    padding-top: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+  .imageContext-text{
+    font-size: 10px;
+    font-weight: 600;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+  .formContent-heading{
+    margin-top: 10px;
+    margin-bottom: 6px;
+    padding-top: 10px;
+  }
+  ._home{
+    display: flex;
+    flex-direction: row;
+  }
+  .abha_id_heading{
+    padding-top: 10px;
+    margin-top: 5px;
+  }
+}
+
+.toggleNav{
+  display: none;
+}
+
+.toggleNav1{
+  display: block;
+  margin-bottom: 20px;
 }
 
 input::-webkit-outer-spin-button,

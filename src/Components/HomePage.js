@@ -218,7 +218,7 @@ const createAbhaIdButton = () => {
 
 
   const aadharClicked = () => {
-    setPage(6);
+    setPage(7);
   };
   const onChangeAadhar = (e) => {
     setAadharNumber(e.target.value)
@@ -288,11 +288,13 @@ const createAbhaIdButton = () => {
               {page === 1 && (
                 <div className="home">
                   <p className="formContent-heading">Create ABHA ID using</p>
-                  <div className="formContent-button" onClick={mobileClicked}>
-                    <p className="formContent-button-text">Mobile</p>
-                  </div>
-                  <div className="formContent-button" onClick={aadharClicked}>
-                    <p className="formContent-button-text">Aadhar</p>
+                  <div className="_home">
+                    <div className="formContent-button" onClick={mobileClicked}>
+                      <p className="formContent-button-text">Mobile</p>
+                    </div>
+                    <div className="formContent-button" onClick={aadharClicked}>
+                      <p className="formContent-button-text">Aadhar</p>
+                    </div>
                   </div>
                 </div>
               )}
@@ -411,7 +413,6 @@ const createAbhaIdButton = () => {
                 >
                   <p className="mobileNumber-button-text"  >Copy ID</p>
                 </div>
-                <p className="copyIdSpan">Copied value: {copyText ?? 'Nothing is copied yet!'}</p>
               </div>
               )}
               
