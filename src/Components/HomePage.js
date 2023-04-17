@@ -1,6 +1,6 @@
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useCopyToClipboard } from 'usehooks-ts'
 import axios from "axios";
 import "../Styles/HomePage.css";
@@ -10,65 +10,131 @@ import {
   NotificationManager,
 } from "react-notifications";
 import "react-notifications/lib/notifications.css";
-import DatePicker from 'react-date-picker';
-import Dropdown from 'react-dropdown';
+// import DatePicker from 'react-date-picker';
+// import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 
 function HomePage() {
   const [value, setValue] = useState();
   const [page, setPage] = useState(1);
-  const [loader, setLoader] = useState(false);
+  // const [loader, setLoader] = useState(false);
   const [accept, setAccept] = useState(false);
+  const [accept2, setAccept2] = useState(false);
   const [data, setData] = useState();
   const [txnId, setTxnId] = useState();
-  const [dob, setDob] = useState(new Date());
+  const [accessToken, setAccessToken] = useState();
+  // const [dob, setDob] = useState(new Date());
+  const [password, setPassword] = useState('')
   const [otpResponse,setOtpResponse] = useState();
-  const [name,setName] = useState('');
+  const [otp, setOtp] = useState();
+  // const [name,setName] = useState('');
   const [aadharNumber, setAadharNumber] = useState();
   const [aadharError, setAadharError] = useState(false);
   const [aadharMessage, setAadharMessage] = useState(false);
-  const [copyText, setCopyText] = useCopyToClipboard()
-  const [nameObj, setNameObj] = useState({name1: 'vaishak8722', id1: '@abdm'})
-  const options = [
-    'Male', 'Female', 'Others'
-  ];
-  var dropDownGenderValue = options[0];
+  const [copyText, setCopyText] = useCopyToClipboard();
+  const [nameObj, setNameObj] = useState('');
+  const [email, setEmail] = useState();
+  const [firstName, setFirstName] = useState();
+  const [middleName, setMiddleName] = useState();
+  const [lastName, setLastName] = useState();
+  // const options = [
+  //   'Male', 'Female', 'Others'
+  // ];
+  // var dropDownGenderValue = options[0];
   
-  var otp;
+  // var otp;
+  // var password;
+  // var abhaId;
 
-  var password;
-  var abhaId;
+  // useEffect(() => {
+  //   // SessionTokenGenerationApi();
+  // }, []);
 
-  useEffect(() => {
-    SessionTokenGenerationApi();
-  }, []);
-
-  const SessionTokenGenerationApi = () => {
+  const AadharOtpGenerationApi = () => {
     const requestOptions = {
-      method: "POST",  
+      method: "GET",  
     };
+
     // "proxy": "https://dev.ndhm.gov.in/gateway/v0.5",
-    fetch("https://kas-api.swaasa.ai:8085/api/sessions", requestOptions)
+    fetch(`/abha/generateOtp?aadhar=${aadharNumber}`, requestOptions)
       .then((response) => response.json())
       .then((data) => {
         setData(data);
-        console.log(data);
-        setLoader(false);
+        // setTxnId(data.txnId);
+        // setAccessToken(data.accessToken);
       });
+      setPage(3)
+
   };
 
-  const mobileOtpGenerationApi = () => {
-    debugger
-    var token = data.sessionData.accessToken;
+  // const AadharOtpGenerationApi = () => {
+  //   axios({
+  //     method:"get",
+  //     url: `/abha/generateOtp?aadhar=${aadharNumber}`,
+  //     withCredentials: false,
+  //   });
+  // }
+
+  const AadharOtpGenerationApi1 = () => {
+    
+    axios
+      .get(
+        `/abha/generateOtp?aadhar=${aadharNumber}`,   
+    )
+    .then(function (response){
+      if(response){
+        // debugger
+        NotificationManager.success("Success", "OTP Sent", 2000);
+        setTxnId(response?.data?.txnId);
+        setAccessToken(response?.data?.acessToken)
+        setAccept2(true);
+        setPage(3);
+      }
+    })
+    .catch(function (error) {
+      var message = error.response?.data?.details[0]?.message;
+      NotificationManager.error(message, "Error", 5000, () => {
+        alert("callback");
+      });
+    });
+  }
+
+  const otpVerifyAadharApi = () => {
+    // var otp = data.sessionData.otp
+    // var token = data.sessionData.accessToken;
+    // var txnId = data.sessionData.txnId;
     axios
       .post(
-        "/generateOtp",
+        `/abha/verifyOtp?otp=${otp}&txnId=${data.txnId}&acessToken=${data.accessToken}`,
+      )
+      .then(function (response) {
+        if (response) {
+          // debuggers
+          NotificationManager.success("Success", "OTP Verified", 2000);
+          setOtpResponse(response.data);
+          setPage(4);
+        }
+      })
+      .catch(function (error) {
+        var message = error.response?.data?.details[0]?.message;
+        NotificationManager.error(message, "Error", 5000, () => {
+          alert("callback");
+        });
+      });
+    };
+
+  const mobileOtpGenerationApi = () => {
+    // debugger
+    // var token = data.sessionData.accessToken;
+    axios
+      .post(
+        "/checkAndGenerateMobileOTP",
         {
           mobile: value,
         },
         {
           headers: {
-            Authorization: "Bearer " + token,
+            Authorization: "Bearer " + accessToken,
           },
         }
       )
@@ -76,7 +142,7 @@ function HomePage() {
         if (response) {
           NotificationManager.success("Success", "OTP Sent", 2000);
           setTxnId(response?.data?.txnId);
-          setPage(3);
+          setPage(5);
           setAccept(false);
         }
       })
@@ -89,17 +155,17 @@ function HomePage() {
   };
 
   const mobileOtpVerificationApi = () => {
-    var token = data.sessionData.accessToken;
+    // var token = data.sessionData.accessToken;
     axios
       .post(
-        "/verifyOtp",
+        "v1/registration/aadhaar/verifyMobileOTP",
         {
           otp: otp,
           txnId: txnId,
         },
         {
           headers: {
-            Authorization: "Bearer " + token,
+            Authorization: "Bearer " + accessToken,
           },
         }
       )
@@ -108,7 +174,7 @@ function HomePage() {
           // debuggers
           NotificationManager.success("Success", "OTP Verified", 2000);
           setOtpResponse(response.data)
-          setPage(4)
+          setPage(6)
         }
       })
       .catch(function (error) {
@@ -119,9 +185,11 @@ function HomePage() {
       });
   };
   const abhaIdGenerationApi = () => {
-    var accesstoken = data.sessionData.accessToken;
-    var token = otpResponse.token
-    console.log(name);
+    // var accesstoken = data.sessionData.accessToken;
+    // var token = otpResponse.token
+    // var txnId = data.sessionData.txnId
+    var txnId = otpResponse.txnId;
+    console.log(firstName);
     axios
       .post(
         "/createHealthId",
@@ -148,40 +216,50 @@ function HomePage() {
       //     "wardCode": "",
       //     "yearOfBirth": 1996
       // },
-        {
-          "address": "h",
-          "dayOfBirth": dob.getDate(),
-          "districtCode": 603,
-          "email": "",
-          "firstName": name,
-          "gender": dropDownGenderValue.charAt(0),
-          "healthId": abhaId,
-          "lastName": "",
-          "middleName": "",
-          "monthOfBirth": dob.getMonth() + 1,
-          "name": name,
-          "password": password,
-          "pincode": "500056",
-          "profilePhoto": "",
-          "stateCode": 35,
-          "subdistrictCode": "",
+      //   {
+      //     "address": "h",
+      //     "dayOfBirth": dob.getDate(),
+      //     "districtCode": 603,
+      //     "email": "",
+      //     "firstName": name,
+      //     "gender": dropDownGenderValue.charAt(0),
+      //     "healthId": abhaId,
+      //     "lastName": "",
+      //     "middleName": "",
+      //     "monthOfBirth": dob.getMonth() + 1,
+      //     "name": name,
+      //     "password": password,
+      //     "pincode": "500056",
+      //     "profilePhoto": "",
+      //     "stateCode": 35,
+      //     "subdistrictCode": "",
           
-          "token": token,
-          "txnId": txnId,
-          "villageCode": "",
-          "wardCode": "",
-          "yearOfBirth": dob.getFullYear()
+      //     "token": token,
+      //     "txnId": txnId,
+      //     "villageCode": "",
+      //     "wardCode": "",
+      //     "yearOfBirth": dob.getFullYear()
+      // }
+      {
+        "email": email,
+        "firstName": firstName,
+        "middleName": middleName,
+        "lastName": lastName,
+        "healthId": nameObj,
+        "password": password,
+        "profilePhoto": "",
+        "txnId": txnId
       },
         {
           headers: {
-            Authorization: "Bearer " + accesstoken,
+            Authorization: "Bearer " + accessToken,
           },
         }
       )
       .then(function (response) {
         if (response) {
           NotificationManager.success("Success", "ID Created", 2000);
-          // setPage(4)
+          setPage(8)
         }
       })
       .catch(function (error) {
@@ -194,31 +272,36 @@ function HomePage() {
   const handleCheckBoxClicked = (e) => {
     setAccept(e.target.checked);
   };
-  const handleGenderDropdown = (e) => {
-    dropDownGenderValue = e.value
-    console.log(dropDownGenderValue)
+  const handleCheckBoxClicked2 = (e) => {
+    setAccept2(e.target.checked);
   };
+  // const handleGenderDropdown = (e) => {
+  //   dropDownGenderValue = e.value
+  //   console.log(dropDownGenderValue)
+  // };
 
-const createAbhaIdButton = () => {
-  abhaIdGenerationApi()
+  const createAbhaIdButton = () => {
+    setPage(8);
+    abhaIdGenerationApi();
 }
-  const mobileClicked = () => {
-    setPage(2);
-  };
+  // const mobileClicked = () => {
+  //   setPage(2);
+  // };
   const sendOtpClicked = (item) => {
-    debugger
     if (accept) mobileOtpGenerationApi();
+    setPage(5)
   };
   const otpVerifyClicked = () => {
     mobileOtpVerificationApi();
+    setPage(6);
   };
   const continueClicked = () => {
-    setPage(5);
+    setPage(7);
   };
 
 
   const aadharClicked = () => {
-    setPage(7);
+    setPage(2);
   };
   const onChangeAadhar = (e) => {
     setAadharNumber(e.target.value)
@@ -239,29 +322,46 @@ const createAbhaIdButton = () => {
         }
     }
   }
-  const copyId = () => {
-    setCopyText(`${nameObj.name1} ${nameObj.id1}`)
+  const copyId = (e) => { 
+    setCopyText(nameObj + "@abdm")
   }
-
+  const sendOtpAadhar = (item) => {
+    if(accept2) AadharOtpGenerationApi();
+  }
+  const otpVerifyAadhar = () => {
+    otpVerifyAadharApi();
+  }
+  const emailHandler = (e) => {
+    setEmail(e.target.value)
+  }
+  const firstNameHandler = (e) => {
+    setFirstName(e.target.value)
+  }
+  const middleNameHandler = (e) => {
+    setMiddleName(e.target.value)
+  }
+  const lastNameHandler = (e) => {
+    setLastName(e.target.value)
+  }
 
   
 
   const otpHandler = (e) => {
-    otp = e.target.value;
+    setOtp(e.target.value);
   };
-  const nameHandler = (e) => {
-    // debugger
-    setName(e.target.value)
-  };
+  // const nameHandler = (e) => {
+  //   // debugger
+  //   setName(e.target.value)
+  // };
    const passwordHandler = (e) => {
-    password = e.target.value;
+    setPassword(e.target.value);
   };
   const abhaIdHandler = (e) => {
-    abhaId= e.target.value;
+    setNameObj(e.target.value);
   };
   return (
     <>
-      {loader ? (
+      {false ? (
         <div className="loader">
           <ColorRing
             visible={true}
@@ -289,9 +389,6 @@ const createAbhaIdButton = () => {
                 <div className="home">
                   <p className="formContent-heading">Create ABHA ID using</p>
                   <div className="_home">
-                    <div className="formContent-button" onClick={mobileClicked}>
-                      <p className="formContent-button-text">Mobile</p>
-                    </div>
                     <div className="formContent-button" onClick={aadharClicked}>
                       <p className="formContent-button-text">Aadhar</p>
                     </div>
@@ -300,6 +397,69 @@ const createAbhaIdButton = () => {
               )}
 
               {page === 2 && (
+                <div className="mobileNumber">
+                  <p className="formContent-heading">
+                    Create ABHA using Mobile
+                  </p>
+                  <p className="mobileNumber-text">Aadhar number</p>
+
+                  <div> 
+                    {/* <input 
+                      className="aadharInput" 
+                      type="text"
+                      pattern="[0-9]"
+                      maxLength="12"
+                      value={aadharNumber} 
+                      onChange={onChangeAadhar}
+                      placeholder="Enter Aadhar number"
+                      
+                    /> */}
+                    <input type="text" placeholder="Enter Aadhar No" name="aadharNo" maxLength={12}
+                      value={aadharNumber} onBlur={aadharValidation} onChange={onChangeAadhar}
+                      className="aadharInput" />
+                      {aadharError &&
+                      <div className="text-error" >
+                          {aadharMessage}
+                      </div>}
+                  </div>
+
+                  <input
+                    className="checkboxAgreed"
+                    type="checkbox"
+                    value="accept2"
+                    onChange={handleCheckBoxClicked2}
+                  />
+                  <label className="checkboxText" htmlFor="vehicle1">
+                    I agree to Terms of use & Privacy policy
+                  </label>
+                  <div
+                    className={accept2 ? "mobileNumber-button" : "disabled"}
+                    onClick={sendOtpAadhar}
+                  >
+                    <p className="mobileNumber-button-text">Send OTP</p>
+                  </div>
+                </div>
+              )}
+              {page === 3 && (
+                <div className="OTPverification">
+                  <p className="formContent-heading">Aadhar verification</p>
+                  <p className="mobileNumber-text">OTP sent to Mobile</p>
+                  <input
+                    className="textfield-otp"
+                    type="text"
+                    onChange={otpHandler}
+                    autoFocus={true}
+                  />
+                  <div
+                    className="mobileNumber-button"
+                    onClick={otpVerifyAadhar}
+                  >
+                    <p className="mobileNumber-button-text">Verify</p>
+                  </div>
+                </div>
+              )}
+
+              {page === 4 && (
                 <div className="mobileNumber">
                   <p className="formContent-heading">
                     Create ABHA using Mobile
@@ -335,7 +495,7 @@ const createAbhaIdButton = () => {
                 </div>
               )}
 
-              {page === 3 && (
+              {page === 5 && (
                 <div className="OTPverification">
                   <p className="formContent-heading">Mobile verification</p>
                   <p className="mobileNumber-text">OTP sent to Mobile</p>
@@ -353,20 +513,31 @@ const createAbhaIdButton = () => {
                   </div>
                 </div>
               )}
-              {page === 4 && (
+              {page === 6 && (
                 <div className="details">
                   <p className="formContent-heading">
                     Create ABHA using Mobile
                   </p>
-                  {/* <p className="mobileNumber-text">Password</p>
-                  <input className="textfield" type="password" /> */}
-                  <p className="mobileNumber-text">Name</p>
-                  <input className="textfield" type="text" onChange={nameHandler} autoFocus={true}/>
 
-                  <p className="mobileNumber-text">Gender</p>
-                  <Dropdown options={options} onChange={handleGenderDropdown} value={dropDownGenderValue} placeholder="Select Gender" />
-                  <p className="mobileNumber-text">Date of birth</p>
-                  <DatePicker onChange={setDob} value={dob} />
+                  <p className="mobileNumber-text">Email</p>
+                  <input className="textfield" type="email" onChange={emailHandler} autoFocus={true}/>
+                 
+                 <div>
+                    <p className="mobileNumber-text">First Name</p>
+                    <input className="textfield" type="text" onChange={firstNameHandler} autoFocus={true}/>
+
+                    <p className="mobileNumber-text">Middle Name</p>
+                    <input className="textfield" type="text" onChange={middleNameHandler} autoFocus={true}/>
+                 </div>
+                  
+                  <p className="mobileNumber-text">Last Name</p>
+                  <input className="textfield" type="text" onChange={lastNameHandler} autoFocus={true}/>
+
+                  {/* <p className="mobileNumber-text">Gender</p>
+                  <Dropdown options={options} onChange={handleGenderDropdown} value={dropDownGenderValue} placeholder="Select Gender" /> */}
+
+                  {/* <p className="mobileNumber-text">Date of birth</p>
+                  <DatePicker onChange={setDob} value={dob} /> */}
                   <div
                     className="mobileNumber-button"
                     onClick={continueClicked}
@@ -375,18 +546,20 @@ const createAbhaIdButton = () => {
                   </div>
                 </div>
               )}
-               {page === 5 && (
+               {page === 7 && (
                 <div className="details">
                   <p className="formContent-heading">
                     Create ABHA using Mobile
                   </p>
                   {/* <p className="mobileNumber-text">Password</p>
                   <input className="textfield" type="password" /> */}
+
                   <p className="mobileNumber-text">ABHA ID</p>
                   <input className="textfield" type="text" autoFocus={true} onChange={abhaIdHandler} />
 
                   <p className="mobileNumber-text">Password</p>
                   <input className="textfield" type="password" onChange={passwordHandler}  />
+                  
                   <div
                     className="mobileNumber-button"
                     onClick={createAbhaIdButton}
@@ -396,7 +569,7 @@ const createAbhaIdButton = () => {
                 </div>
               )}
 
-              {page === 6 && (
+              {page === 8 && (
                 <div className="details">
                 <p className="abha_id_heading">
                   ABHA ID Created Successfully
@@ -405,56 +578,17 @@ const createAbhaIdButton = () => {
                   <p className="your_abha_id">Your ABHA ID</p>
                 </div>
 
-                <p className="copyIdText" id="copy_id">{nameObj.name1}<span className="copyIdSpan"> {nameObj.id1} </span></p>
-                
+                <p className="copyIdText" id="copy_id"> {nameObj} <span className="copyIdSpan">@abdm</span></p>
+                {/* {copyText} */}
                 <div
                   className="mobileNumber-button"
                   onClick={copyId}
                 >
-                  <p className="mobileNumber-button-text"  >Copy ID</p>
+                  <p className="mobileNumber-button-text" >Copy ID</p>
                 </div>
               </div>
               )}
-              
 
-              {page === 7 && (
-                <div className="mobileNumber">
-                  <p className="formContent-heading">
-                    Create ABHA using Mobile
-                  </p>
-                  <p className="mobileNumber-text">Aadhar number</p>
-
-                  <div> 
-                    {/* <input 
-                      className="aadharInput" 
-                      type="text"
-                      pattern="[0-9]"
-                      maxLength="12"
-                      value={aadharNumber} 
-                      onChange={onChangeAadhar}
-                      placeholder="Enter Aadhar number"
-                      
-                    /> */}
-                    <input type="text" placeholder="Enter Aadhar No" name="aadharNo" maxLength={12}
-                      value={aadharNumber} onBlur={aadharValidation} onChange={onChangeAadhar}
-                      className="aadharInput" />
-                      {aadharError &&
-                      <div className="text-error" >
-                          {aadharMessage}
-                      </div>}
-                  </div>
-
-                  <input
-                    className="checkboxAgreed"
-                    type="checkbox"
-                    value="accept"
-                    onChange={handleCheckBoxClicked}
-                  />
-                  <label className="checkboxText" htmlFor="vehicle1">
-                    I agree to Terms of use & Privacy policy
-                  </label>
-                </div>
-              )}
             </div>
           </div>
         </div>

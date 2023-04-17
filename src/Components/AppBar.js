@@ -16,7 +16,7 @@ function AppBar() {
             </div>
            
             <nav >
-                <div className={showElement ? "toggleNav" :"toggleNav1"}>
+                <div className={showElement ? "toggleNav " :"toggleNav1 navItems container-flex"}>
                     <div className='spaceBox' ></div>
                     <NavLink to="" className="listItem">Solutions</NavLink>
                     <NavLink to="" className="listItem">About Us</NavLink>

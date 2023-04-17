@@ -8,7 +8,10 @@ import {BrowserRouter} from 'react-router-dom';
 import axios from "axios";
 
 // axios.defaults.baseURL = 'https://dev.ndhm.gov.in/gateway/v0.5/';
-axios.defaults.baseURL = 'https://healthidsbx.abdm.gov.in/api/v1/registration/mobile';
+// axios.defaults.baseURL = 'https://healthidsbx.abdm.gov.in/api/v1/registration/mobile';
+axios.defaults.baseURL = 'https://21cmt70vqd.execute-api.ap-south-1.amazonaws.com/Prod';
+// "proxy":"https://21cmt70vqd.execute-api.ap-south-1.amazonaws.com/Prod",
+
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

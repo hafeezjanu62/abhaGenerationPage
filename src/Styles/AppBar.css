@@ -30,6 +30,8 @@
     }
 }
 
+
+
 .menuLine{
     width: 20px;
     height: 3px;
@@ -58,11 +60,13 @@
     color: #31404e;
     text-decoration: none;
     font-weight: 500;
-
+    margin-top: 30px;
 }
 .button{
     background-color: #ff7d00;
     cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 .buttonText {
     color: #fdfefd;
@@ -79,7 +83,7 @@
     
     }
     .spaceBox{
-width: 150px;
+        width: 150px;
     }
     .logo{
         width: 150px;
@@ -96,7 +100,7 @@ width: 150px;
     
     }
     .spaceBox{
-width: 0px;
+        width: 100px;
     }
     .logo{
         width: 130px;
